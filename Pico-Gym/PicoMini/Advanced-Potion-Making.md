@@ -23,3 +23,5 @@ Overall, much easier to fix this PNG file than in c0rrupted, probably because I 
 
 
 My first instinct was that this was a least significant bit stego challenge, and I used this [site](https://stylesuxx.github.io/steganography/), but it turned up nothing.
+
+I then decided to go to my next-best resource, which was YouTube. I found [walkthroughs of stego challenges](https://www.youtube.com/watch?v=sChN6o06jDM) and learned about stegsolve. I ran the commands on the [install site](https://github.com/zardus/ctf-tools/blob/master/stegsolve/install) and then opened it with `java -jar bin/stegsolve.jar`. At that point, I just opened the fixed PNG file and used the arrow keys to get through all the color planes until Red Plane 0 gave the flag.
