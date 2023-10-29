@@ -55,4 +55,4 @@ flag = asm2(0x4,0x2d)
 print(flag)
 ```
 
-Running this Python code should be enough. From now on, I'll probably try to reconstruct assembly in another programming language if tracing is too difficult (as it is here). Don't forget to convert your decimal flag to hexadecimal at the end.
+Running this Python code should be enough. From now on, I'll probably try to reconstruct assembly in another programming language if tracing is too difficult (as it is here - who wants to count the number of iterations?). Don't forget to convert your decimal flag to hexadecimal at the end.
