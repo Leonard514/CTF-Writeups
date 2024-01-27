@@ -36,3 +36,6 @@ a --> d
 
 FLAG REDACTED
 ```
+
+
+A short while after I realized you could just use the letters quipqiup gave you and replace only the alphabetic characters. Oh well! The longer method better illustrates the concepts of a substitution cipher, so it was good to go through that exercise.
