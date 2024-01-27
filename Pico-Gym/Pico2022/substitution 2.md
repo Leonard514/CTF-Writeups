@@ -11,7 +11,7 @@ isnfnnpctitnznfmxhisnfwnxxntimjxctsnascdstushhxuhgqbinftnubfciruhgqnicichktckuxb
 
 # Challenge approach
 
-I started out by going to [quipqiup.com](quipqiup.com) since this is how the previous two substitution challenges were solved. They are not documented here, because they consisted of one step: putting the challenge text into the repository. This time, however, it was not so simple because quipqiup apparently got confused by the presence of numbers and underscores in the flag (meaning salvaging the flag was required):
+I started out by going to [quipqiup.com](quipqiup.com) since this is how the previous two substitution challenges were solved. They are not documented here, because they consisted of one step: putting the challenge text into the website. This time, however, it was not so simple because quipqiup apparently got confused by the presence of numbers and underscores in the flag (meaning salvaging the flag was required):
 
 <img width="960" alt="image" src="https://github.com/Leonard514/CTF-Writeups/assets/92343899/ddb9451d-cea3-43fa-aad4-47b3009fa85c">
 
