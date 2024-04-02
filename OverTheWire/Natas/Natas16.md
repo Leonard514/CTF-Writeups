@@ -49,4 +49,31 @@ I then used Burpsuite's intruder to cycle through all the alphabetic characters,
 
 Modified Payload: `$(tail -n 1 $(head -n 2 $(grep "^[$(cut -c <index> /etc/natas_webpass/natas17)]" dictionary.txt)))`
 
-I then realized that the regex used double quotes, which are forbidden. At a later time, what I'll do is remove the regex and instead do some tests on Burpsuite whereby I'll make three payloads (one on a given character, one on the head index, andone on the tail index) so that I can see if changing the index of the word will result in results without any collisions (since that is all that really matters)
+I then realized that the regex used double quotes, which are forbidden. I then realized the head and tail subshells were breaking since they demanded a file instead of standard input. After some toying around, I tried something new:
+
+`1; grep -i "$(grep §A§e dictionary.txt)" dictionary.txt #`
+
+- This essentially takes an alphabetic character and appends an `e` to it, then does a case-sensitive grep of the dictionary. The result is then used for a case-insensitive grep of the dictionary, where the §A§ can be replaced by any alphabetic character (yes, I did copy-paste this from burpsuite). Attacking all the alphanumeric characters on the dictionary yielded different results for each case - positive reuslts! Of course the plan would be to replace §A§ with the cut subshell from earlier and use the differentiated results to decipher the case of each letter in the password. As a side effect, searches with no results dumped the whole file due to the regex $ in the "" (and in this case I don't have to worry about the "" being prohibited - that's there to simulate how Natas16 would respond since I was testing on Natas 9 for greater flexibility)
+
+#### Finishing Approach 6a (determining case)
+
+Final payload: `$(grep $(cut -c §0§ /etc/natas_webpass/natas17)e dictionary.txt)`
+
+Where §0§ is a number (index) from 1 to 32 used to extract each character of the password
+
+I then automated the index with burpsuite's intruder and used the testing payload to differentiate the cases
+
+I then made a partially constructed password **with** the cases, but not the numbers. That would require another approach.
+
+# Task: Find digits
+
+- I initially wanted to try and concatenate the dictionary file with line numbers (-n argument), using some grepping and cutting, to differentiate the files. In time I realized this would not work since subshells and piping aren't going to work the same (with subshells, you place the output as text to input into the next command, but grep, cut and cat all demand a file as input - an unworkable situation)
+
+- I then developed a new approach: I would use the number from the cut command and I will execute **tail** with the -n to vary the number of lines, and I will have the password digit change the number of lines. In tests for the previous approach, I found that if I returned a multiline output for a grep, then it would only grep the first line. After some payload tests, the approach was surprisingly easy:
+
+
+Payload for Natas9 (used for testing due to no restrictions): `grep -i "$(tail -n §0§ dictionary.txt)" dictionary.txt
+
+Payload for Natas16 (the actual level): `$(tail -n $(cut -c §0§ /etc/natas_webpass/natas17) dictionary.txt)`
+
+I then automated the index with burpsuite's intruder and used the Natas9 test results for comparison. I then obtained the password with the cases.
