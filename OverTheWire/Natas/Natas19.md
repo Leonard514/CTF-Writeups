@@ -12,4 +12,39 @@ I tried logging in with random credentials and observed (via Firefox) that the P
 260-a
 ```
 
-At this point, I realized that burpsuite wasn't going to hold its own because I needed something that would quickly convert values to hex. It was time to take out Python! Now,
+At this point, I realized that burpsuite wasn't going to hold its own because I needed something that would quickly convert values to hex. It was time to take out Python! Now, I know nothing about python web hacking, so I simply looked up [a tutorial of the previous challenge](https://www.youtube.com/watch?v=C9yxUTQLbRI&list=PL1H1sBF1VAKWM3wMCn6H5Ql6OrgIivt2V&index=16) to watch and learn.
+
+
+```python
+import requests
+
+# Define username and password
+username = 'natas19'
+password = 'REDACTED'
+
+url = 'http://%s.natas.labs.overthewire.org' % username
+
+session = requests.Session()
+
+# Get request with parameters of the URL, the username
+# and password to log in, and the cookie
+response = session.get(url, auth=(username, password))
+
+# Prints the HTML response and the cookies of the session
+print(response.text)
+print(session.cookies)
+```
+
+
+
+I then used [this source](https://python-forum.io/thread-1715.html) to find out how to convert to hexadecimal in Python. This ran a successful test:
+
+```python
+for session_id in range(1, 100, 10):
+    session_str = str(session_id) + "-a"
+    print(session_str, end=' ')
+    session_str = session_str.encode('utf-8').hex()
+    print(session_str)
+```
+
+Then, all I had to do was incorporate a brute-force of the session ID in get requests to the for loop... but it wasn't really that simple (ongoing)
