@@ -22,6 +22,8 @@ etc etc etc
 
 ## Challenge Approach
 
+### Approach 1: XSS?
+
 I tried a sequencer on burpsuite, but the cookies were generated pretty randomly (with the alphanumeric characters). I floundered around on Cryptocat's DVWA tutorials for some time because I didn't know what to do. XSS tutorials looked pretty interesting, so I put in some JS in the name input box:
 
 `<script>alert("hrar")</script>`
@@ -29,4 +31,13 @@ I tried a sequencer on burpsuite, but the cookies were generated pretty randomly
 With the debugging option enabled (through appending **?debug** to the URL), I found the JS is executed three times, and twice before the admin check is enabled.
 
 
-The first hacking session grows late, but the goal for the next session is to find a way to inject JS that changes the value of `$_SESSION["admin"]` to 1 (if it be possible)
+I then looked up a bunch of actual XSS challenge videos and found that this wasn't what I was looking for. In XSS, we want an "admin" script to execute our JS payload, and we didn't have such a thing here.
+
+
+### Approach 2: PHP injection
+
+I then saw that the name input option seemed pretty vulnerable. I first wanted to inject PHP code that set the variable `$_SESSION["admin"]` to 1 directly, inputting payloads like `$_SESSION["admin"] = 1`, but this did nothing.
+
+I then noticed how in the source code, how the session data was read by taking pairs of strings in the file for each data piece (key and value), with the key-value pairs separated by newlines. The course of action then became obvious: make a dummy name and put in a newline, then put `admin 1` after it. It would then write that to a file, after which I could reload the page with the same cookie, where the file would be read and `$_SESSION['admin']` would be set to 1 (meaning I get the flag)
+
+Now, URL encoding a newline consists of `%0D%0A` rather than \n (which I had gotten used to with my experience in Python). Once I put in the payload, I extracted my flag.
