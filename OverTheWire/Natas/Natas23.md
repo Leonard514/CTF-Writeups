@@ -10,7 +10,7 @@ The [source code](https://github.com/Leonard514/CTF-Writeups/blob/main/OverTheWi
 
 # Challenge Approach
 
-Remember that I took the liberty to see video titles so that I am not completely lost with these new challenges. Now, in this case, I had to learn about PHP type juggling. I found that [this resource](https://web.archive.org/web/20201112021256/https://owasp.org/www-pdf-archive/PHPMagicTricks-TypeJuggling.pdf) is pretty helpful - it even gives real-world examples!
+Remember that I took the liberty to see video walkthrough titles so that I am not completely lost with these new challenges. Now, in this case, I had to learn about PHP type juggling. I found that [this resource](https://web.archive.org/web/20201112021256/https://owasp.org/www-pdf-archive/PHPMagicTricks-TypeJuggling.pdf) is pretty helpful - it even gives real-world examples!
 
 I think this portion should be the most telling:
 
