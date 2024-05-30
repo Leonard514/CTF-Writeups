@@ -1,0 +1,18 @@
+# Challenge Overview
+
+- Description: The web project was rushed and no security assessment was done. Can you read the /etc/passwd file?
+- Hint: XML external entity Injection
+
+
+
+Upon opening the webpage, we are given information that with regards to computer science, Carnegie Mellon University is ranked among the best in the world
+
+<img width="476" alt="image" src="https://github.com/Leonard514/CTF-Writeups/assets/92343899/8277cb60-8a6a-4a2a-b4f3-7986434ad5d8">
+
+
+# Challenge Approach
+
+To begin the challenge, I looked up a [youtube tutorial](https://youtu.be/0DQnWalxYb4?list=PLmqenIp2RQciV955S2rqGAn2UOrR2NX-v) about XXE Injection. After watching the video for a bit, I found that XXE injection seeks to modify XML code sent to a website (in a POST request) to inject code to include a file on the website. This can be seen in [this timestamp](https://www.youtube.com/watch?v=0DQnWalxYb4&list=PLmqenIp2RQciV955S2rqGAn2UOrR2NX-v&index=29) of the tutorial. After watching the video, I performed an identical XXE attack on the given website.
+
+
+<img width="476" alt="image" src="https://github.com/Leonard514/CTF-Writeups/assets/92343899/2b41342a-1683-4c2a-9245-47ff953e625c">
