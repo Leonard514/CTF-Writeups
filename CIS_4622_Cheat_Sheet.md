@@ -116,6 +116,8 @@ From this point on I realized it would be better to utilize a tabular format of 
 
 | Example | Explanation |
 | - | - |
-| `cat /etc/passwd \| grep -v "false\\\|nologin" \| tr ":" " " \| column -t  \| awk '{print $1, $NF}' \| sed 's/bin/HTB/g' \| wc -l` | Display text of /etc/passwd. Exclude lines with "false" or "nologin", then replace colons with spaces, then display columns in tabular form. Then, only show the first and last columns. Then, substitute 's' bin for HTB (g replaces all matches). Then, display the number of lines (number of matches) |
+| `cat /etc/passwd \| grep -v "false\\|nologin" \| tr ":" " " \| column -t  \| awk '{print $1, $NF}' \| sed 's/bin/HTB/g' \| wc -l` | Display text of /etc/passwd. Exclude lines with "false" or "nologin", then replace colons with spaces, then display columns in tabular form. Then, only show the first and last columns. Then, substitute 's' bin for HTB (g replaces all matches). Then, display the number of lines (number of matches) |
 | `cat /etc/passwd \| grep cry0l1t3` | Display the cry0l1t3 line in /etc/passwd |
 | `cat /etc/passwd \| cut -d":" -f1` | Cut /etc/passwd by delimiter :, display first field only (usernames) |
+| `cat /etc/passwd \| grep cry0l1t3 \| cut -d":" -f1,3` | Print /etc/passwd, printing only the line with cry0l1t3. Cut by colons and display fields 1 and 3 (the username and uid) |
+| `cat /etc/passwd \| grep cry0l1t3 \| cut -d":" -f1,3 \| sed 's/:/,/g'` | Same as above, but all colons replaced with commas |
