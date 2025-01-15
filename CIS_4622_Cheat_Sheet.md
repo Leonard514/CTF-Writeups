@@ -1,3 +1,5 @@
+Note: The tables aren't my work, they're from HackTheBox
+
 # Linux Fundamentals
 
 | **Command** | **Description** |
