@@ -89,12 +89,33 @@ Note: The tables aren't my work, they're from HackTheBox
 - For **mv** and **cp**, you can specify multiple files. If you specify a directory as the last parameter, you move or copy the files into that directory
 - For **find**, there are many options for filetype, filename, owner, filesize, last edit date, etc. Here it is below:
 
+- `find / -type f -name *.conf -user root -size +20k -newermt 2020-03-03 -exec ls -al {} \; 2>/dev/null`
+
 | **Option** | **Description** |
 | - | - |
 | `-type f` | Hereby, we define the type of the searched object. In this case, 'f' stands for 'file'. |
 | `-name *.conf` | With '-name', we indicate the name of the file we are looking for. The asterisk (*) stands for 'all' files with the '.conf' extension. |
 | `-user root` | This option filters all files whose owner is the root user. | 
-| `-size +20k | We can then filter all the located files and specify that we only want to see the files that are larger than 20 KiB. |
+| `-size +20k` | We can then filter all the located files and specify that we only want to see the files that are larger than 20 KiB. |
 | `-newermt 2020-03-03` | With this option, we set the date. Only files newer than the specified date will be presented. |
 | `-exec ls -al {} \;` | This option executes the specified command, using the curly brackets as placeholders for each result. The backslash escapes the next character from being interpreted by the shell because otherwise, the semicolon would terminate the command and not reach the redirection. |
 | `2>/dev/null` | This is a STDERR redirection to the 'null device', which we will come back to in the next section. This redirection ensures that no errors are displayed in the terminal. This redirection must not be an option of the 'find' command. |
+
+- Note to self: Be sure to put any redirection commands a space from anything previous
+- There are file descriptors, which are indicators of connections for input/output operations. STDIN is 0, STDOUT is 1, STDERR is 2. You can redirect any of these streams to a file (or /dev/null to get rid of it). For example, if we wanted to direct command output to a file log.txt and errors to another file, we would do `<command> 2>error.txt 1>log.txt`. You can also use just `>` to redirect all remaining output (which may include normal output and errors)
+- To redirect to standard input, utilize `<`. For example, `cat < stdout.txt` redirects contents of stdout.txt as STDIN.
+- We know about using `>` to overwrite and `>>` to append. Apparently `<<` makes a stream from a file to add to standard input - this ends through an `EOF` (End-Of-File) function.
+- **Piping** allows direction of standard output as input to another program. `grep` allows for text filtering, while `wc` allows to count the number of words (or lines, or anything really)
+- You can read files via `more` (which leaves text on the terminal) and `less` (which doesn't, but has more options). There's also the typical `head` and `tail`. `sort` sorts the output alphabetically (likely by ASCII value)
+- You can utilize `grep` to filter results, the `-v` flag allows for an inverted search
+- `cut` splits text by delimeter. Utilize the `-d"<delimiter>"` flag to specify the delimiter and `-f<index_list>` to define which 1-indexed element to access
+- `tr` replaces all instances (within the input) of the first string argument with the second string argument
+- `column -t` will make tabular columns of output
+
+From this point on I realized it would be better to utilize a tabular format of examples and explanations
+
+| Example | Explanation |
+| - | - |
+| `cat /etc/passwd | grep -v "false\|nologin" | tr ":" " " | column -t  | awk '{print $1, $NF}' | sed 's/bin/HTB/g' | wc -l` | Display text of /etc/passwd. Exclude lines with "false" or "nologin", then replace colons with spaces, then display columns in tabular form. Then, only show the first and last columns. Then, substitute 's' bin for HTB (g replaces all matches). Then, display the number of lines (number of matches) |
+| `cat /etc/passwd | grep cry0l1t3` | Display the cry0l1t3 line in /etc/passwd |
+| `cat /etc/passwd | cut -d":" -f1` | Cut /etc/passwd by delimiter :, display first field only (usernames) |
