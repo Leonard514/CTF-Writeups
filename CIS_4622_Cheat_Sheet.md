@@ -116,6 +116,6 @@ From this point on I realized it would be better to utilize a tabular format of 
 
 | Example | Explanation |
 | - | - |
-| `cat /etc/passwd | grep -v "false\|nologin" | tr ":" " " | column -t  | awk '{print $1, $NF}' | sed 's/bin/HTB/g' | wc -l` | Display text of /etc/passwd. Exclude lines with "false" or "nologin", then replace colons with spaces, then display columns in tabular form. Then, only show the first and last columns. Then, substitute 's' bin for HTB (g replaces all matches). Then, display the number of lines (number of matches) |
-| `cat /etc/passwd | grep cry0l1t3` | Display the cry0l1t3 line in /etc/passwd |
-| `cat /etc/passwd | cut -d":" -f1` | Cut /etc/passwd by delimiter :, display first field only (usernames) |
+| `cat /etc/passwd \| grep -v "false\\\|nologin" \| tr ":" " " \| column -t  \| awk '{print $1, $NF}' \| sed 's/bin/HTB/g' \| wc -l` | Display text of /etc/passwd. Exclude lines with "false" or "nologin", then replace colons with spaces, then display columns in tabular form. Then, only show the first and last columns. Then, substitute 's' bin for HTB (g replaces all matches). Then, display the number of lines (number of matches) |
+| `cat /etc/passwd \| grep cry0l1t3` | Display the cry0l1t3 line in /etc/passwd |
+| `cat /etc/passwd \| cut -d":" -f1` | Cut /etc/passwd by delimiter :, display first field only (usernames) |
