@@ -1,3 +1,5 @@
+# Linux Fundamentals
+
 | **Command** | **Description** |
 | --------------|-------------------|
 | `man <tool>` | Opens man pages for the specified tool. | 
@@ -72,3 +74,8 @@
 | `wc` | Prints newline, word, and byte counts for a given input. |
 | `chmod` | Changes permission of a file or directory. |
 | `chown` | Changes the owner and group of a file or directory. |
+
+### Notes for Linux Fundamentals
+- Random paths (ex: to a mail directory) may be stored in the environment variables, utilize env for this one
+- MTU is the maximum transmission unit, or the largest packet size. It can be found utilizing ifconfig
+- Remember to read manual pages
