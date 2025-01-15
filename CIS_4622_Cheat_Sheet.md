@@ -78,6 +78,11 @@ Note: The tables aren't my work, they're from HackTheBox
 | `chown` | Changes the owner and group of a file or directory. |
 
 ### Notes for Linux Fundamentals
-- Random paths (ex: to a mail directory) may be stored in the environment variables, utilize env for this one
-- MTU is the maximum transmission unit, or the largest packet size. It can be found utilizing ifconfig
+- Random paths (ex: to a mail directory) may be stored in the environment variables, utilize **env** for this one
+- MTU is the maximum transmission unit, or the largest packet size. It can be found utilizing **ifconfig**
 - Remember to read manual pages
+- **ls -al** works as usual, apparently files have indexes. You can view them utilizing the **-i** flag
+- **cd** apparently has a **-** option to cd into the previous directory
+- There are some keyboard shortcuts. **CTRL + L** quickly clears the screen, while **CTRL + R** allows for searching the command history for a specific command
+- **mkdir** has a **-p** flag that allows for making multiple directories at a time (ex: **mkdir -p CIS_3213/Week_1_Work**
+- There is a **tree** command that allows for displaying a file tree
