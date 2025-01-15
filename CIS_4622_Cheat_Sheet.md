@@ -121,3 +121,6 @@ From this point on I realized it would be better to utilize a tabular format of 
 | `cat /etc/passwd \| cut -d":" -f1` | Cut /etc/passwd by delimiter :, display first field only (usernames) |
 | `cat /etc/passwd \| grep cry0l1t3 \| cut -d":" -f1,3` | Print /etc/passwd, printing only the line with cry0l1t3. Cut by colons and display fields 1 and 3 (the username and uid) |
 | `cat /etc/passwd \| grep cry0l1t3 \| cut -d":" -f1,3 \| sed 's/:/,/g'` | Same as above, but all colons replaced with commas |
+| `cat /etc/passwd \| tr ":" " " \| column -t \| awk '{print $1, $3, $NF}' \| tr " " ","` | Print /etc/passwd. Replace all colons with spaces. Arrange output tabularly. Then, include only the first, third, and last columns (username, uid, and shell). Replace spaces with commas for csv output. |
+| `cat /etc/passwd \| tr ":" " " \| column -t \| awk '{print $1, $3, $NF}' \| tr " " "," \| grep -v "nologin\\|false" ` | Same as above, but excluding lines with nologin or false |
+| `cat /etc/passwd \| tr ":" " " \| column -t \| awk '{print $1, $3, $NF}' \| tr " " "," \| grep -v "nologin" \| wc -l` | Similar to above, but only excluding nologin lines this time. Also the output is the number of lines (number of matching users) |
