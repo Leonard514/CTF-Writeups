@@ -81,8 +81,20 @@ Note: The tables aren't my work, they're from HackTheBox
 - Random paths (ex: to a mail directory) may be stored in the environment variables, utilize **env** for this one
 - MTU is the maximum transmission unit, or the largest packet size. It can be found utilizing **ifconfig**
 - Remember to read manual pages
-- **ls -al** works as usual, apparently files have indexes. You can view them utilizing the **-i** flag
+- **ls -al** works as usual, apparently files have indexes (otherwise known as inodes) stored in a system table. You can view them utilizing the **-i** flag. You can also utilize the **-t** flag to sort by last time modified
 - **cd** apparently has a **-** option to cd into the previous directory
 - There are some keyboard shortcuts. **CTRL + L** quickly clears the screen, while **CTRL + R** allows for searching the command history for a specific command
 - **mkdir** has a **-p** flag that allows for making multiple directories at a time (ex: **mkdir -p CIS_3213/Week_1_Work**
 - There is a **tree** command that allows for displaying a file tree
+- For **mv** and **cp**, you can specify multiple files. If you specify a directory as the last parameter, you move or copy the files into that directory
+- For **find**, there are many options for filetype, filename, owner, filesize, last edit date, etc. Here it is below:
+
+| **Option** | **Description** |
+| - | - |
+| `-type f` | Hereby, we define the type of the searched object. In this case, 'f' stands for 'file'. |
+| `-name *.conf` | With '-name', we indicate the name of the file we are looking for. The asterisk (*) stands for 'all' files with the '.conf' extension. |
+| `-user root` | This option filters all files whose owner is the root user. | 
+| `-size +20k | We can then filter all the located files and specify that we only want to see the files that are larger than 20 KiB. |
+| `-newermt 2020-03-03` | With this option, we set the date. Only files newer than the specified date will be presented. |
+| `-exec ls -al {} \;` | This option executes the specified command, using the curly brackets as placeholders for each result. The backslash escapes the next character from being interpreted by the shell because otherwise, the semicolon would terminate the command and not reach the redirection. |
+| `2>/dev/null` | This is a STDERR redirection to the 'null device', which we will come back to in the next section. This redirection ensures that no errors are displayed in the terminal. This redirection must not be an option of the 'find' command. |
