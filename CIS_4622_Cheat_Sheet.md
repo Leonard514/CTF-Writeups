@@ -169,3 +169,52 @@ To apply these, utilize the -E option in grep
 | `ps -aux \| grep ssh` | View the process running OpenSSH |
 | `systemctl list-units --type=service` | List all services |
 | `journalctl -u ssh.service --no-pager` | View OpenSSH service error logs |
+
+# Week 1 Class 2 Notes
+- Linux starts with the root directory **/**. There is the **/home** for users except root (which has **/root**. The root is the highest privilege - targeted by attackers!
+- Usual user accounts should have limited privileges, though they often aren't limited enough (due to bad practice). This is why we have a privilege escalation module!
+- **/etc** is where configuration files are (ex: for Apache, databases)
+- **/var** includes logs (very important for incident investigation or troubleshooting) and emails, web files, cron jobs
+- **/tmp** for temporary files, **/bin** for binaries
+- YOU WANT TO COPY THE PATH TABLES TO THIS FILE
+
+- There are multiple Linux distributions for multiple purposes. Some try to resemble Windows
+- ParrotOS is our OS, BlackArch is difficult learning curve for cybersecurity, Kali Linux is popular, Ubuntu and CentOS are general
+
+- You utilize the shell. MobaXterm is a terminal emulator with multiple protocols and payment levels (free, premium). Terminals allow multitasking!
+- We utilize BASH (Bourne-Again Shell). There are other shells which may have different commands!
+
+- There is a customizable prompt. For **$** it's a regular user, for **#** it's a root/superuser.
+- We utilize **sudo** to get elevated privileges
+
+- **man** will get the manual of an application/binary
+- **curl** allows use of different protocols to get a webpage. Developers sometimes leave sensitive information in HTML comments!
+
+- These are the common commands. When we first root a system, we need to know the user rights. We utilize **whoami** to learn who we are. We can recon the website to know the user's role (ex: developer role, who have rights to run, patch, execute, write, etc.). We can use the **id** to tell us the user and group membership
+- **hostname** gives the hostname of the system. **uname (-a)** gives OS info (ex: release version, date released, hardware platform, etc. Knowing the OS version allows us to go on exploit-db.com and search for an exploit, then copy-paste it into an executable like a script kiddie.
+- **pwd** shows the current directory
+- **ifconfig** and **ip** shows local network interface configuration. Newer OS utilizes **ip** more
+- **netstat** (network statistics) and **ss** (socket statistics). To communicate between devices, end devices make the sockets. Netstat utilizes _Active Internet connections_ for connection to another computer and then _Active UNIX domain sockets_ for inter-process communication
+- You can see **who** to see who is logged in, and **env** to see environmental variables (so that we don't have to type the path manually.
+- In the environmental variables, the OS sees the **Path** from environmental variables to open executables. In Windows CMD, you use the **set** command instead
+- There is user information in **/etc/passwd**, includes usernames, home directories, and shells. **/usr/sbin/nologin** are not users for logging in, but for applications to use. **/bin/bash** is a shell used for normal users.
+
+- We can use **ls** to list files, **ls -l** to have more details, and **ls -la** to include hidden files (starting with .). **.bash_history** shows command history and possibly credentials. **.bashrc** allows for prompt customization, while **cd** allows to change directory via relative or absolute paths
+- Files have inode references, which are OS references to allow for location of files in the system
+- Old disks have layers of plates with a spinning head, which are split into sectors and tracks. The inode number will show where the file is in the disk. But solid-state drives have many chips of memory where there are grids of data.
+- **.bash_logout** executed upon logout
+
+- **touch** utilized to make files. **nano** and **vim** can make and edit files! **vim** requires memorizing different commands
+- Pipes **|** allows to redirect output of a command to another command's input
+
+- You can utilize **which** to find the binary of a command
+- For **find**, specify the directory to start the search. You can filter by filetype, filename, user owner, filesize, last modified. You can execute a command on the results. You can also send errors (2) to **/dev/null** to remove them. There is also standard input (0) and standard output (1)
+- You can utilize **wc** to count lines, words, etc.
+
+- FILTERING CONTENTS (where we're stuck)
+- **less** for the whole file, **head** and **tail**, **sort**, **grep**. In **grep**, we can use double quotes to make the characters interpreted literally
+- We can utilize **netstat** to see listening services for connections.
+
+- Regular Expressions are for filtering patterns in long strings
+
+- For perms
