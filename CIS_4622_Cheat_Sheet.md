@@ -126,15 +126,18 @@ From this point on I realized it would be better to utilize a tabular format of 
 | `cat /etc/passwd \| tr ":" " " \| column -t \| awk '{print $1, $3, $NF}' \| tr " " "," \| grep -v "nologin" \| wc -l` | Similar to above, but only excluding nologin lines this time. Also the output is the number of lines (number of matching users) |
 
 
-### Regex Operators
+### [Regex Operators](https://www.geeksforgeeks.org/write-regular-expressions/)
 
 To apply these, utilize the -E option in grep
 | **Operators** | **Description** |
 | - | - |
-| (a) | The round brackets are used to group parts of a regex. Within the brackets, you can define further patterns which should be processed together. |
-| \[a-z\] | The square brackets are used to define character classes. Inside the brackets, you can specify a list of characters to search for. |
-| {1,10} | The curly brackets are used to define quantifiers. Inside the brackets, you can specify a number or a range that indicates how often a previous pattern should be repeated. |
-| \| | Also called the OR operator and shows results when one of the two expressions matches |
-| .* | Operates similarly to an AND operator by displaying results only when both expressions are present and match in the specified order |
-| grep -E "(my\|false)" /etc/passwd | Grep for all lines containing my OR false in /etc/passwd |
-| grep -E "(my.*false)" /etc/passwd | Grep for all lines containing my AND false in /etc/passwd |
+| `(a)` | The round brackets are used to group parts of a regex. Within the brackets, you can define further patterns which should be processed together. |
+| `\[a-z\]` | The square brackets are used to define character classes. Inside the brackets, you can specify a list of characters to search for. |
+| `{1,10}` | The curly brackets are used to define quantifiers. Inside the brackets, you can specify a number or a range that indicates how often a previous pattern should be repeated. |
+| `\|` | Also called the OR operator and shows results when one of the two expressions matches |
+| `.*` | Operates similarly to an AND operator by displaying results only when both expressions are present and match in the specified order |
+| `.` | Wildcard character, can be any character |
+| `*` | Repeat previous character 0 or more times |
+| `^` and `$` | The beginning and end of a string respectively |
+| `grep -E "(my\|false)" /etc/passwd` | Grep for all lines containing my OR false in /etc/passwd |
+| `grep -E "(my.*false)" /etc/passwd` | Grep for all lines containing my AND false in /etc/passwd |
