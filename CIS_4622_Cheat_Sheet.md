@@ -141,3 +141,31 @@ To apply these, utilize the -E option in grep
 | `^` and `$` | The beginning and end of a string respectively |
 | `grep -E "(my\|false)" /etc/passwd` | Grep for all lines containing my OR false in /etc/passwd |
 | `grep -E "(my.*false)" /etc/passwd` | Grep for all lines containing my AND false in /etc/passwd |
+
+- Regarding directory permissions, execute permissions are required to traverse; write permissions are required to make, delete, rename files/subdirectories
+
+| Example | Explanation |
+| - | - |
+| `chmod a+r shell && ls -l shell` | Adds read permissions for all three groups and displays permissions |
+| `chmod 754 shell && ls -l shell` | Gives owner all perms, group read and execute, and others read perms. Display perms |
+| `chown root:root shell && ls -l shell` | Makes the root user and root group the owner of a file. Display this change |
+
+- Set User ID and Set Group ID bits allow people to run files as other users/groups, and is dangerous as a route for privilege escalation
+- The sticky bit ensures that only the owner user or root can delete or rename files. In `ls -l`, a lowercase t means execute permissions are enabled for other users and uppercase T means execute permissions are disabled for other users.
+- Regarding packages the Advanced Package Manager (APT) handles dependencies and the sources can often be found in `/etc/apt/sources.list/` or `/etc/apt/sources.list.d`. APT also provides caching of package information
+
+
+| Example | Explanation |
+| - | - |
+| `apt-cache search <keyword>` | Searches APT cache - if you put the name of a package, it gives information about that package. |
+| `apt list --installed` | Lists installed packages |
+| `sudo apt install impacket-scripts -y` | installs package |
+| `mkdir ~/nishang/ && git clone https://github.com/samratashok/nishang.git ~/nishang ` | Makes a directory and clones into it |
+| `wget http://archive.ubuntu.com/ubuntu/pool/main/s/strace/strace_4.21-1ubuntu1_amd64.deb` | Downloads a package strace from URL |
+| `sudo dpkg -i strace_4.21-1ubuntu1_amd64.deb` | Installs from .deb file via dpkg |
+| `systemctl start ssh` | Starts the OpenSSH Service |
+| `systemctl status ssh` | View information about OpenSSH |
+| `systemctl enable ssh` | Add OpenSSH to a SysV service script, which runs SSH on startup |
+| `ps -aux \| grep ssh` | View the process running OpenSSH |
+| `systemctl list-units --type=service` | List all services |
+| `journalctl -u ssh.service --no-pager` | View OpenSSH service error logs |
