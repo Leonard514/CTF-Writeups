@@ -348,3 +348,138 @@ NOTE: Again this didn't work
 
 OpenVPN: the package openvpn. The configuration file is **/etc/openvpn/server.conf** or **/etc/openvpn/<username>.conf**
 - Utilize `sudo openvpn --config <config file>` to get a file to connect to the server
+
+### Working with Web Services
+- Once again apache didn't boot. I tried making /var/logs/apache2, which made it stop crashing the first time, but there still weren't any files. I then purged and reinstalled and couldn't get it to work again
+- You can utilize `wget` to download html files, `curl` to just print them
+
+`python3 -m http.server` starts a server
+
+These other commands start an HTTP server in port 8080:
+- `npm install http-server; http-server -p 8080`
+- `php -S 127.0.0.1:8080`
+
+### Backup and Restore
+- rsync allows for large data backups (because it only transfers changed data each time)
+- Duplicity and Deja Dup allows for backups with GUI (rsync as backend)
+
+
+| **Command** | **Description** |
+| `rsync -av /path/to/mydirectory user@backup_server:/path/to/backup/directory` | Backs up a directory to a directory on a (potentially remote) backup directory. -a flag preserves attributes (ex: perms) while -v allows for verbose output |
+| `rsync -avz --backup --backup-dir=/path/to/backup/folder --delete /path/to/mydirectory user@backup_server:/path/to/backup/directory` | Backup with -z for compressed backups (faster transfers). --backup makes incremental backups, while --delete will remove files no longer in the source |
+| `rsync -av user@remote_host:/path/to/backup/directory /path/to/mydirectory` | Restores backup |
+| `rsync -avz -e ssh /path/to/mydirectory user@backup_server:/path/to/backup/directory` | Backs up over SSH |
+- You may potentially use cron to automate backups
+
+### File System Management
+- There are many file systems (ex: ext2, ext3, ext4, etc.)
+- Linux is based on UNIX - an inode table contains metadata for files and directories (incuding perms, ownership, filesize)
+- `fdisk` is used to manage physical storage devices (hard disk, SSD). Drives can be partitioned into separate logical units, which can have different file system formats (ext4, NTFS, FAT32)
+- `fdisk`, `gpart`, and `GParted` can be used to manage partitions
+- Each partition mounted to a specific directory at boot time as defined by **/etc/fstab**
+
+| **Command** | **Description** |
+| `ls -il` | Show files with their inode numbers |
+| `sudo fdisk -l` | Show disk partitions - they are the device name followed by a number |
+| `cat /etc/fstab` | Show file systems mounted at boot |
+| `mount` | View currently mounted file systems`
+| `sudo mount /dev/sdb1 /mnt/usb` | Mount a USB drive in /dev/sdb1 to /mnt/usb |
+| `sudo umount /mnt/usb` | Unmount the USB drive from above. The USB drive must not be used by any processes - using processes must be shut down first |
+| `lsof \| grep cry0l1t3` | Search for files opened by user cry0l1t3 |
+| `mkswap` | Setup up a swap area on a device. Make sure the swap space is on a separate partition and that it is encrypted to prevent sensitive data disclosure. Swapping is used to write inactive memory to the partition to free up memory. Swaps can also be used for hibernation to store the system state before power off (allowing it to be restored on power on) |
+| `swapon` | Use a swap
+
+In **/etc/fstab**, if you want to unmount the USB at shutdown add the line `/dev/sdb1 /mnt/usb ext4 rw,noauto,user 0 0`
+
+### Containerization
+
+We'll start with _Docker_. They are lightweight and not as vulnerable as virtual machines, though breakout is still possible
+
+Installation script:
+```
+#!/bin/bash
+
+# Preparation
+sudo apt update -y
+sudo apt install ca-certificates curl gnupg lsb-release -y
+sudo mkdir -m 0755 -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Install Docker Engine
+sudo apt update -y
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+# Add user htb-student to the Docker group
+sudo usermod -aG docker htb-student
+echo '[!] You need to log out and log back in for the group changes to take effect.'
+
+# Test Docker installation
+docker run hello-world
+```
+
+- You can make Docker images from Dockerfiles. The Dockerfile will contain a bunch of bash commands and must be named **Dockerfile**, here's an example
+
+```
+# Use the latest Ubuntu 22.04 LTS as the base image
+FROM ubuntu:22.04
+
+# Update the package repository and install the required packages
+RUN apt-get update && \
+    apt-get install -y \
+        apache2 \
+        openssh-server \
+        && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create a new user called "docker-user"
+RUN useradd -m docker-user && \
+    echo "docker-user:password" | chpasswd
+
+# Give the docker-user user full access to the Apache and SSH services
+RUN chown -R docker-user:docker-user /var/www/html && \
+    #chown -R docker-user:docker-user /var/run/apache2 && \
+    chown -R docker-user:docker-user /var/log/apache2 && \
+    #chown -R docker-user:docker-user /var/lock/apache2 && \
+    usermod -aG sudo docker-user && \
+    echo "docker-user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Expose the required ports
+EXPOSE 22 80
+
+# Start the SSH and Apache services
+CMD service ssh start && /usr/sbin/apache2ctl -D FOREGROUND
+```
+
+| **Command** | **Description** |
+| `docker build -t fs_docker .` | Build a docker image from a Dockerfile. Apply a tag, which must be in all lowercase. If the Dockerfile has an error somewhere, the docker image doesn't load |
+| `docker run -p 8022:22 -p 8080:80 -d FS_docker` | Run a docker image. For the ports, the first is the host port, the second is the port on the docker image. This also utilizes the Docker tag. At this point the image will be visible via `docker ps` |
+| `docker ps` | List all running containers |
+| `docker stop` | Stop a running container |
+| `docker start` | Start a stopped container |
+| `docker restart` | Restart a running container |
+| `docker rm` | Remove a container |
+| `docker rmi` | Remove a Docker image |
+| `docker logs` | View the logs of a container |
+
+- Docker containers are immutable, any change made to them while they are running is lost. To make a changed container, you need to modify the Dockerfile and build a new Docker container.
+
+Next, do _Linux Containers (LXC)_. They allow multiple linux systems on the same host! This is lightweight virtualization. Fortunately we can just install `lxc` and `lxc-utils`, but Docker is more user friendly apparently
+
+| **Command** | **Description** |
+| `sudo lxc-create -n linuxcontainer -t ubuntu` | Make a new container **linuxcontainer** with a template **ubuntu** |
+| `lxc-ls` | List all existing containers |
+| `lxc-stop -n <container>` | Stop a running container |
+| `lxc-start -n <container>` | Start a stopped container |
+| `lxc-restart -n <container>` | Restart a running container |
+| `lxc-config -n <container name> -s storage` | Manage container storage |
+| `lxc-config -n <container name> -s network` | Manage container network settings |
+| `lxc-config -n <container name> -s security` | Manage container security settings |
+| `lxc-attach -n <container>` | Connect to a container |
+| `lxc-attach -n <container> -f /path/to/share` | Connect to a container and share a specific directory or file |
+
+- Containers allow to quickly penetration test a certain environment or play with malware. You need to secure it though (ex: remove packages on the container or using cgroups to limit CPU resource usage)
+- Configuration file is in **/usr/share/lxc/config** and will have the name of the container
+- `lxc.cgroup.cpu.shares = 512`: 100% system utilization is 1024, so this puts a cap of 50%
+- `lxc.cgroup.memory.limit_in_bytes = 512M`: Self-explanatory. Max 0.5G in RAM
+- `sudo systemctl restart lxc.service`: Apply changes
