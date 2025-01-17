@@ -310,7 +310,7 @@ Example crontab:
 0 */6 * * * /path/to/update_software.sh
 ```
 
-### Network Services - this will need ofice hours
+### Network Services - this will need office hours
 
 SSH is what you'd expect. Of course the config files are /etc/ssh/sshd_config
 
