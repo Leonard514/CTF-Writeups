@@ -247,6 +247,8 @@ The filter contents questions are especially hard. Let's start with the third on
 | `&&` | Double ampersands can be used to run commands in sequence. If a command fails, subsequent commands are not executed |
 | `\|` | Pipes can execute commands in sequence. Output of the first command becomes input of the second command, etc. |
 
+### Task Scheduling
+
 - Apparently services have Type fields. You can see them in the .service files.
 
 The timers are not my work, but from HackTheBox
@@ -307,3 +309,18 @@ Example crontab:
 # System Update every 6 hours
 0 */6 * * * /path/to/update_software.sh
 ```
+
+### Network Services
+
+SSH is what you'd expect. Of course the config files are /etc/ssh/sshd_config
+
+NFS is basically secure FTP. There are some perms:
+
+| **Permissions** | **Description** |
+|-|-|
+| rw | Gives users and systems read and write permissions to the shared directory. |
+| ro | Gives users and systems read-only access to the shared directory. |
+| no_root_squash | Prevents the root user on the client from being restricted to the rights of a normal user. |
+| root_squash | Restricts the rights of the root user on the client to the rights of a normal user. |
+| sync | Synchronizes the transfer of data to ensure that changes are only transferred after they have been saved on the file system. |
+| async | Transfers data asynchronously, which makes the transfer faster, but may cause inconsistencies in the file system if changes have not been fully committed. |
