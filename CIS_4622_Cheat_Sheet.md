@@ -310,7 +310,7 @@ Example crontab:
 0 */6 * * * /path/to/update_software.sh
 ```
 
-### Network Services
+### Network Services - this will need ofice hours
 
 SSH is what you'd expect. Of course the config files are /etc/ssh/sshd_config
 
@@ -324,3 +324,27 @@ NFS is basically secure FTP. There are some perms:
 | root_squash | Restricts the rights of the root user on the client to the rights of a normal user. |
 | sync | Synchronizes the transfer of data to ensure that changes are only transferred after they have been saved on the file system. |
 | async | Transfers data asynchronously, which makes the transfer faster, but may cause inconsistencies in the file system if changes have not been fully committed. |
+
+NFS commands:
+```
+mkdir nfs_sharing
+echo '/home/desertstargazer/nfs_sharing hostname(rw,sync,no_root_squash)' >> /etc/exports # may need to chmod /etc/exports for write first
+mkdir ~/target_nfs
+mount 10.129.12.17:/home/john/dev_scripts ~/target_nfs # This is not working, maybe because remote host is down
+tree ~/target_nfs
+```
+
+Apache: install apache2. Config is /etc/apache2/apache2.conf. You may need to get root permissions. Add the following:
+
+```
+<Directory /var/www/html>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+</directory>
+```
+
+NOTE: Again this didn't work
+
+OpenVPN: the package openvpn. The configuration file is **/etc/openvpn/server.conf** or **/etc/openvpn/<username>.conf**
+- Utilize `sudo openvpn --config <config file>` to get a file to connect to the server
