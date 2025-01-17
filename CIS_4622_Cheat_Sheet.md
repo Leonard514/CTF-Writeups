@@ -1,4 +1,4 @@
-Note: The tables aren't my work, they're from HackTheBox
+**Note: The tables aren't my work, they're from HackTheBox**
 
 # Linux Fundamentals
 
@@ -217,4 +217,93 @@ To apply these, utilize the -E option in grep
 
 - Regular Expressions are for filtering patterns in long strings
 
-- For perms
+# Linux Fundamentals Cont
+
+The filter contents questions are especially hard. Let's start with the third one:
+- Private link [here](https://usfedu-my.sharepoint.com/:w:/r/personal/leonardwright_usf_edu/Documents/Spring%202025/CIS%204622/Linux%20Fundamentals/Filter%20Contents.docx?d=w4ecf6db08b554f3f8a032abdc2ac1353&csf=1&web=1&e=Ln2szQ)
+
+
+- You can kill processes with `kill`, `pkill`, `pgrep`, and `killall`. There are some signals out there:
+
+| **Signal** | **Description** |
+| - | - |
+| 1 | SIGHUP - This is sent to a process when the terminal that controls it is closed. |
+| 2 | SIGINT - Sent when a user presses [Ctrl] + C in the controlling terminal to interrupt a process. |
+| 3 | SIGQUIT - Sent when a user presses [Ctrl] + D to quit. |
+| 9 | SIGKILL - Immediately kill a process with no clean-up operations. |
+| 15 | SIGTERM - Program termination. |
+| 19 | SIGSTOP - Stop the program. It cannot be handled anymore. |
+| 20 | SIGTSTP - Sent when a user presses [Ctrl] + Z to request for a service to suspend. The user can handle it afterward. |
+
+| **Command** | **Description** |
+| - | - |
+| `kill 9 <PID>` | Forcefully kill process with PID |
+| `CTRL + Z` | Puts a process in the background, suspending it |
+| `jobs` | View background jobs and their IDs|
+| `bg` | Make a process run in the background. Any output prints in the foreground, and CTRL + C does not work until the process is brought to foreground |
+| `fg <id>` | Make a process run in the foreground |
+| `<command> &` | Runs <command> in the background. |
+| `;` | Semicolons can be used to run commands in sequence. If a command fails, subsequent commands are still executed |
+| `&&` | Double ampersands can be used to run commands in sequence. If a command fails, subsequent commands are not executed |
+| `\|` | Pipes can execute commands in sequence. Output of the first command becomes input of the second command, etc. |
+
+- Apparently services have Type fields. You can see them in the .service files.
+
+The timers are not my work, but from HackTheBox
+- You can make a custom service that runs jobs every now and then. Here's how you do that:
+
+```
+sudo mkdir /etc/systemd/system/mytimer.timer.d
+sudo nano /etc/systemd/system/mytimer.timer
+sudo nano /etc/systemd/system/mytimer.service
+```
+
+/etc/systemd/system/mytimer.timer
+```
+[Unit]
+Description=My Timer
+
+[Timer]
+# Run only once after system boot
+OnBootSec=3min
+# Run regularly
+OnUnitActiveSec=1hour
+
+[Install]
+WantedBy=timers.target
+```
+
+/etc/systemd/system/mytimer.service
+```
+[Unit]
+Description=My Service
+
+[Service]
+ExecStart=/full/path/to/my/script.sh
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Then run
+```
+sudo systemctl daemon-reload
+sudo systemctl start mytimer.timer
+sudo systemctl enable mytimer.timer
+```
+
+- Regarding cron, you must make a `crontab` file. There's a special format:
+
+| **Time Frame** | **Description** |
+|-|-|
+| Minutes (0-59) | This specifies in which minute the task should be executed. |
+| Hours (0-23) | This specifies in which hour the task should be executed. |
+| Days of month (0-31) | This specifies on which day of the month the task should be executed. |
+| Months (1-12) | This specifies in which month the task should be executed. |
+| Days of the week (0-7) | This specifies on which day of the week the task should be executed. |
+
+Example crontab:
+```
+# System Update every 6 hours
+0 */6 * * * /path/to/update_software.sh
+```
