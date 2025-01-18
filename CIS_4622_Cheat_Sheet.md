@@ -370,6 +370,7 @@ These other commands start an HTTP server in port 8080:
 
 
 | **Command** | **Description** |
+| - | - |
 | `rsync -av /path/to/mydirectory user@backup_server:/path/to/backup/directory` | Backs up a directory to a directory on a (potentially remote) backup directory. -a flag preserves attributes (ex: perms) while -v allows for verbose output |
 | `rsync -avz --backup --backup-dir=/path/to/backup/folder --delete /path/to/mydirectory user@backup_server:/path/to/backup/directory` | Backup with -z for compressed backups (faster transfers). --backup makes incremental backups, while --delete will remove files no longer in the source |
 | `rsync -av user@remote_host:/path/to/backup/directory /path/to/mydirectory` | Restores backup |
@@ -384,6 +385,7 @@ These other commands start an HTTP server in port 8080:
 - Each partition mounted to a specific directory at boot time as defined by **/etc/fstab**
 
 | **Command** | **Description** |
+| - | - |
 | `ls -il` | Show files with their inode numbers |
 | `sudo fdisk -l` | Show disk partitions - they are the device name followed by a number |
 | `cat /etc/fstab` | Show file systems mounted at boot |
