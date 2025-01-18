@@ -590,5 +590,5 @@ Client:
 | Find files with certain permissions | `find / -perm 4000` | `find / -perm -4000` | Since Solaris has a slightly different permission system, you must include the - before the 4000 |
 | NFS Server | `echo '/home/desertstargazer/nfs_sharing <**ip_network**>/<**subnet_mask**>(rw,sync,no_root_squash)' >> /etc/exports` | `share -F nfs -o rw /export/home` | |
 | NFS Client | `mount 10.129.12.17:/home/john/dev_scripts ~/target_nfs` | `mount -F nfs 10.129.15.122:/nfs_share /mnt/local` | Configuration file for NFS is **/etc/dfs/dfstab** in Solaris (not **/etc/exports** |
-| List files opened by process | `sudo lsof -c apache2` | `pfiles \`pgrep httpd\`` | |
-| Debug software by tracing system calls | `sudo strace -p \`pgrep apache2\`` | `truss ls` | truss can trace signals to a process and system calls by children |
+| List files opened by process | `sudo lsof -c apache2` | ``` pfiles `pgrep httpd` ``` | |
+| Debug software by tracing system calls | ``` sudo strace -p `pgrep apache2\ ``` | `truss ls` | truss can trace signals to a process and system calls by children |
