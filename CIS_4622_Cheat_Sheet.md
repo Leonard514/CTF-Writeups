@@ -344,7 +344,9 @@ Apache: install apache2. Config is /etc/apache2/apache2.conf. You may need to ge
 </directory>
 ```
 
-NOTE: Again this didn't work
+For this to work, you need to host the files in the server and then start the service. You then need to connect to the server's IP via client to access the files. This may require running two VMs on a network!
+
+`sudo python3 -m http.server 443 -b 192.168.159.129`: This allows you to run an HTTP server bound to a specific IP address (of an interface). This may allow VMs to establish a client-server relationship again.
 
 OpenVPN: the package openvpn. The configuration file is **/etc/openvpn/server.conf** or **/etc/openvpn/<username>.conf**
 - Utilize `sudo openvpn --config <config file>` to get a file to connect to the server
@@ -352,6 +354,7 @@ OpenVPN: the package openvpn. The configuration file is **/etc/openvpn/server.co
 ### Working with Web Services
 - Once again apache didn't boot. I tried making /var/logs/apache2, which made it stop crashing the first time, but there still weren't any files. I then purged and reinstalled and couldn't get it to work again
 - You can utilize `wget` to download html files, `curl` to just print them
+- I eventually got it to work out with two Ubuntu 20 VMs
 
 `python3 -m http.server` starts a server
 
