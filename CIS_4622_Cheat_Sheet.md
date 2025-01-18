@@ -459,6 +459,7 @@ CMD service ssh start && /usr/sbin/apache2ctl -D FOREGROUND
 ```
 
 | **Command** | **Description** |
+| - | - |
 | `docker build -t fs_docker .` | Build a docker image from a Dockerfile. Apply a tag, which must be in all lowercase. If the Dockerfile has an error somewhere, the docker image doesn't load |
 | `docker run -p 8022:22 -p 8080:80 -d FS_docker` | Run a docker image. For the ports, the first is the host port, the second is the port on the docker image. This also utilizes the Docker tag. At this point the image will be visible via `docker ps` |
 | `docker ps` | List all running containers |
