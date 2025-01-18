@@ -328,9 +328,9 @@ NFS is basically secure FTP. There are some perms:
 NFS commands:
 ```
 mkdir nfs_sharing
-echo '/home/desertstargazer/nfs_sharing hostname(rw,sync,no_root_squash)' >> /etc/exports # may need to chmod /etc/exports for write first
+echo '/home/desertstargazer/nfs_sharing <**ip_network**>/<**subnet_mask**>(rw,sync,no_root_squash)' >> /etc/exports # may need to chmod /etc/exports for write first
 mkdir ~/target_nfs
-mount 10.129.12.17:/home/john/dev_scripts ~/target_nfs # This is not working, maybe because remote host is down
+mount 10.129.12.17:/home/john/dev_scripts ~/target_nfs
 tree ~/target_nfs
 ```
 
