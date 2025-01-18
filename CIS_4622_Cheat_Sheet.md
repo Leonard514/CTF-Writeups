@@ -592,3 +592,23 @@ Client:
 | NFS Client | `mount 10.129.12.17:/home/john/dev_scripts ~/target_nfs` | `mount -F nfs 10.129.15.122:/nfs_share /mnt/local` | Configuration file for NFS is **/etc/dfs/dfstab** in Solaris (not **/etc/exports** |
 | List files opened by process | `sudo lsof -c apache2` | ``` pfiles `pgrep httpd` ``` | |
 | Debug software by tracing system calls | ``` sudo strace -p `pgrep apache2` ``` | `truss ls` | truss can trace signals to a process and system calls by children |
+
+### System Logs and Monitoring
+| **Log Type** | **Filepath** | **Description** |
+| - | - | - |
+| Kernel Logs | /var/log/kern.log | Hardware drivers, system calls, kernel events, crashes. Use cases include DoS detection and malware detection |
+| System logs | /var/log/syslog | System events (services starting/stopping, login attempts, rebooting). Use cases include detecting service problems and unauthorized access |
+| Authentication Logs | /var/log/auth.log | Success/Fail authentication attempts. Use cases include detecting compromised users, cron jobs, and unauthorized use of services |
+| Application logs | /var/log/<app>/error.log (it varies) | Errors for critical services. Use cases include detecting configuration issues, vulnerabilities, unauthorized access/exfiltration |
+| Access Logs | See table below | Record user activity (login, file access). Can be used to identify exfiltration, compromise, failed compromise attempts, etc. Audit logs track modification attempts (success/failure) to system configuration, files, etc. |
+
+| **Application** | **Log Filepath** |
+| - | - |
+| apache2 | /var/log/apache2/error.log, /var/log/apache2/access.log |
+| nginx | /var/log/nginx.access.log |
+| OpenSSH | /var/log/auth.log (Ubuntu), /var/log/secure (CentOS, RHEL) |
+| MySQL | /var/log/mysql/error.log, /var/log/mysql/mysql.log |
+| PostgreSQL | /var/log/postgresql/postgresql-version-main.log |
+| Systemd | /var/log/journal |
+| fail2ban (account lockout) | /var/log/fail2ban.log |
+| ufw | /var/log/ufw.log |
