@@ -327,8 +327,10 @@ NFS is basically secure FTP. There are some perms:
 
 NFS commands:
 ```
+# SERVER
 mkdir nfs_sharing
 echo '/home/desertstargazer/nfs_sharing <**ip_network**>/<**subnet_mask**>(rw,sync,no_root_squash)' >> /etc/exports # may need to chmod /etc/exports for write first
+# CLIENT
 mkdir ~/target_nfs
 mount 10.129.12.17:/home/john/dev_scripts ~/target_nfs
 tree ~/target_nfs
@@ -470,6 +472,7 @@ CMD service ssh start && /usr/sbin/apache2ctl -D FOREGROUND
 Next, do _Linux Containers (LXC)_. They allow multiple linux systems on the same host! This is lightweight virtualization. Fortunately we can just install `lxc` and `lxc-utils`, but Docker is more user friendly apparently
 
 | **Command** | **Description** |
+| - | - |
 | `sudo lxc-create -n linuxcontainer -t ubuntu` | Make a new container **linuxcontainer** with a template **ubuntu** |
 | `lxc-ls` | List all existing containers |
 | `lxc-stop -n <container>` | Stop a running container |
@@ -486,3 +489,88 @@ Next, do _Linux Containers (LXC)_. They allow multiple linux systems on the same
 - `lxc.cgroup.cpu.shares = 512`: 100% system utilization is 1024, so this puts a cap of 50%
 - `lxc.cgroup.memory.limit_in_bytes = 512M`: Self-explanatory. Max 0.5G in RAM
 - `sudo systemctl restart lxc.service`: Apply changes
+
+- I still need help with the lxc containers
+
+### Network Configuration
+
+| **Command** | **Description** |
+| - | - |
+| `ifconfig` | Shows information on each network interface, including IP address, subnet mask, broadcast
+| `ip addr` | Same as above in a slightly different format |
+| `sudo ifconfig eth0 up` OR `sudo ip link set eth0 up` | Activates the eth0 interface |
+| `sudo ifconfig eth0 192.168.1.2` | Assigns IP 192.168.1.2 to interface eth0 |
+| `sudo ifconfig eth0 netmask 255.255.255.0` | Assigns subnet mask 255.255.255.0 to interface eth0 |
+| `sudo route add default gw 192.168.1.1 eth0` | Assigns 192.168.1.1 as default gateway for eth0 |
+| `sudo systemctl restart networking` | Restarts networking to save changes |
+
+Important files
+
+- **/etc/resolv.conf**: configures DNS servers
+```
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+```
+- **/etc/network/interfaces**: Makes persistent network changes across reboots
+```
+auto eth0
+iface eth0 inet static
+  address 192.168.1.2
+  netmask 255.255.255.0
+  gateway 192.168.1.1
+  dns-nameservers 8.8.8.8 8.8.4.4
+```
+
+- Discretionary Access Control (DAC): File owners control the read/write/execute/delete permissions to their fiels
+- Mandatory Access ControL (MAC): Resources are assigned security levels, and only users cleared for that level or higher can access those resources (govt, healthcare, financial)
+- Role-Based Access Control (RBAC): There are roles with permissions. It's basically like groups and permissions in Windows/Linux.
+- It's important to monitor and capture network traffic to identify and patch security issues
+
+| **Command** | **Description** |
+| - | - |
+| `ping <remote host>` | Verify connectivity with remote host. Also shows connection latency |
+| `traceroute <remote host>` | Shows route of packets to remote host, including IP addresses and connection latencies for any intermediary routers. Asterisks show the packets may have dropped or ICMP was blocked. |
+| `netstat -a` | Display network connections and associated ports. Can identify network activity
+
+- More notes for AppArmor, SELinux, and tcpwrap coming shortly
+
+### Remote Desktop Protocols in Linux
+- X11 utilizes protocols to give a Ubuntu GUI. For a Linux computer, there's an X server which utilizes the ports 6000 and 6001-6009, which can help render the local GUI and share files. X11 is in plaintext
+- In **/etc/ssh/sshd_config**, setting **X11Forwarding** to **yes** allows for SSH tunneling of X11. You can then execute ssh with the -X option to get GUI. But this is a bad idea because X11 is insecure - attackers can log keystrokes, move the mouse, take screenshots, etc.
+- X Display manager Control Protocol (XDMCP) utilizes UDP port 177 to provide remote desktop sessions, but it is insecure and vulnerable to MITM.
+- Virtual Network Computing (VNC) is remote desktop and more secure since communication is encrypted and access requires authentication. Some give the remote user the local screen, others utilize virtual sessions (like RDP). VNC usually uses port 5900 and incremented ports
+
+TigerVNC Setup
+
+Server:
+| **Command** | **Description** |
+| - | - |
+| `sudo apt install xfce4 xfce4-goodies tigervnc-standalone-server -y` | Install required packages. TigerVNC needs the XFCE4 desktop manager (not GNOME) |
+| `vncpasswd` | Configures a password for the VNC connection |
+| `chmod +x ~/.vnc/xstartup` | Makes the file executable |
+| `vncserver` | Starts TigerVNC server. Only do this when the two configuration files below are made |
+| `vncserver -list` | Lists VNC sessions. You want to note the RFB Port number. |
+
+**~/.vnc/startup**
+```
+#!/bin/bash
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+/usr/bin/startxfce4
+[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+x-window-manager &
+```
+
+**~/.vnc/config**
+```
+geometry=1920x1080
+dpi=96
+```
+
+Client:
+| **Command** | **Description** |
+| - | - |
+| `ssh -L 5901:127.0.0.1:5901 -N -f -l htb-student <server_ip>` | Any connections to the client's 5901 port will be forwarded (redirected) to the server at port 5901. This is called port forwarding. Enter the password |
+| `sudo apt install xtightvncviewer` | Get GUI for VNC viewing |
+| `xtightvncviewer localhost:5901` | Connects to local port 5901, which is forwarded to the VNC server by the SSH command. Enter the password and then the GUi for the server will pop up |
