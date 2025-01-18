@@ -574,3 +574,18 @@ Client:
 | `ssh -L 5901:127.0.0.1:5901 -N -f -l htb-student <server_ip>` | Any connections to the client's 5901 port will be forwarded (redirected) to the server at port 5901. This is called port forwarding. Enter the password |
 | `sudo apt install xtightvncviewer` | Get GUI for VNC viewing |
 | `xtightvncviewer localhost:5901` | Connects to local port 5901, which is forwarded to the VNC server by the SSH command. Enter the password and then the GUi for the server will pop up |
+
+### Solaris
+- It is designed for enterprise uses with security and performance in mind. Its Service Management Facility optimizes services, while it can handle complex networks, large amounts of data, and good security
+- Solaris is closed-source by Oracle Corporation
+
+| **Function** | **Linux Command** | **Solaris Command** | **Notes** |
+| - | - | - | - |
+| Get system information | `uname -a` | `showrev -a` | showrev includes patch level and hardware info, is more detailed |
+| Install packages | `sudo apt-get install apache2` | `pkgadd -d SUNWapchr` | Solaris uses Solaris Package Manager (SPM). Solaris doesn't need sudo since there is role-based access control to download packages. sudo is available as of Solaris 11 |
+| Modify permissions | `chmod 700 filename` | `chmod 700 filename` | |
+| Find files with certain permissions | `find / -perm 4000` | `find / -perm -4000` | Since Solaris has a slightly different permission system, you must include the - before the 4000 |
+| NFS Server | `echo '/home/desertstargazer/nfs_sharing <**ip_network**>/<**subnet_mask**>(rw,sync,no_root_squash)' >> /etc/exports` | `share -F nfs -o rw /export/home` | |
+| NFS Client | `mount 10.129.12.17:/home/john/dev_scripts ~/target_nfs` | `mount -F nfs 10.129.15.122:/nfs_share /mnt/local` | Configuration file for NFS is **/etc/dfs/dfstab** in Solaris (not **/etc/exports** |
+| List files opened by process | `sudo lsof -c apache2` | `pfiles \`pgrep httpd\`` | |
+| Debug software by tracing system calls | `sudo strace -p \`pgrep apache2\`` | `truss ls` | truss can trace signals to a process and system calls by children |
